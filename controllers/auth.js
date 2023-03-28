@@ -36,19 +36,19 @@ const login = async (req, res) => {
     account.refreshToken = refreshToken;
     account.save();
 
+    const roles = Object.values(account.roles);
+
     res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
     res.status(StatusCodes.OK).json({
-        user: {
-            name: account.name
-        },
-        accessToken
+        accessToken,
+        roles
     })
 }
 
 const refreshToken = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) {
-        throw new UnauthenticatedError('Invalid Credentials.');
+        throw new UnauthenticatedError('Invalid Cookie');
     }
 
     const refreshToken = cookies.jwt;

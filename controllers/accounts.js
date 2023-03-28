@@ -1,6 +1,6 @@
 const Account = require('../models/Account');
 
-const getAllAccounts = async (req, res) => {
+const getAccounts = async (req, res) => {
     const { userName, sort, fields } = req.query;
     const queryObject = {};
     if (userName) {
@@ -67,4 +67,4 @@ const deleteAccount = async (req, res) => {
     return res.status(200).json({ account });
 }
 
-module.exports = { getAccounts: getAllAccounts, getAccount, createAccount, updateAccount, deleteAccount };
+module.exports = { getAccounts, getAccount, createAccount, updateAccount, deleteAccount };

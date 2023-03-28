@@ -1,8 +1,9 @@
 const express = require('express');
 require('express-async-errors');
 const app = express();
-const authRouter = require('./routes/accounts');
+const authRouter = require('./routes/auth');
 const productsRouter = require('./routes/products');
+const accountsRouter = require('./routes/accounts');
 const adminProductsRouter = require('./routes/adminProducts');
 const connectDB = require('./db/connect');
 const authenticateUser = require('./middleware/authentication');
@@ -11,6 +12,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 require('dotenv').config();
+const { logger } = require('./middleware/logEvents');
 
 // extra security packages
 const helmet = require('helmet');
@@ -18,6 +20,8 @@ const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const xss = require('xss-clean');
 const rateLimiter = require('express-rate-limit');
+
+app.use(logger);
 
 app.use(
     rateLimiter({
@@ -33,9 +37,14 @@ app.use(cors(corsOptions));
 app.use(xss());
 
 
+// app.options('*', (req, res) => {
+//     console.log("in options");
+//     res.sendStatus(200);
+// })
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/products', authenticateUser, productsRouter);
 app.use('/api/v1/admin/products', adminProductsRouter);
+app.use('/api/v1/accounts', accountsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

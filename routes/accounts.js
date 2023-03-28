@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, refreshToken, logout } = require('../controllers/auth');
+const { getAccounts } = require('../controllers/accounts');
 
 
 
-router.route('/register').post(register);
-router.route('/login').post(login);
-router.route('/refresh').get(refreshToken);
-router.route('/logout').get(logout);
+router.route('/getAll').get(getAccounts);
 
 module.exports = router;
